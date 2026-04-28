@@ -64,9 +64,8 @@ function MandalaLogo({ size = 38 }: { size?: number }) {
 // ─── Sidebar Step Indicator ────────────────────────────────────────────────────
 const STEPS = [
     { label: "Akun",              desc: "Email & password" },
-    { label: "Identitas Pribadi", desc: "KTP & data diri" },
+    { label: "PIC",               desc: "Data diri" },
     { label: "Data Perusahaan",   desc: "NPWP, NIB, SIUP" },
-    { label: "Dokumen Legal",     desc: "Upload berkas" },
     { label: "Konfirmasi",        desc: "Tinjau & kirim" },
 ];
 
@@ -561,7 +560,7 @@ export default function KYCPage() {
                     {step === 2 && (
                         <div>
                             <PanelHeader step={2}
-                                         title={<>Identitas <em className="italic text-rimba">pribadi</em></>}
+                                         title={<>Penanggung <em className="italic text-rimba">Jawab</em></>}
                                          subtitle="Data diri penanggung jawab akun. Sesuaikan dengan KTP yang akan diunggah di langkah berikutnya."
                             />
                             <div className="grid grid-cols-2 gap-5">
@@ -573,30 +572,6 @@ export default function KYCPage() {
                                     <input type="text" value={form.lastName} onChange={(e) => set("lastName")(e.target.value)}
                                            placeholder="Sesuai KTP" className={inputClass} />
                                 </Field>
-                                <div className="col-span-2">
-                                    <Field label="NIK (Nomor Induk Kependudukan)" required hint="Wajib 16 digit, tidak boleh disingkat."
-                                           error={form.nik && form.nik.length !== 16 ? "NIK harus 16 digit angka." : undefined}>
-                                        <input type="text" value={form.nik}
-                                               onChange={(e) => set("nik")(e.target.value.replace(/\D/g, "").substring(0, 16))}
-                                               placeholder="16 digit sesuai KTP" className={inputClass} maxLength={16} />
-                                    </Field>
-                                </div>
-                                <Field label="Tempat Lahir" required>
-                                    <input type="text" value={form.pob} onChange={(e) => set("pob")(e.target.value)}
-                                           placeholder="Kota" className={inputClass} />
-                                </Field>
-                                <Field label="Tanggal Lahir" required>
-                                    <input type="text" value={form.dob}
-                                           onChange={(e) => set("dob")(formatDOB(e.target.value))}
-                                           placeholder="DD/MM/YYYY" className={inputClass} maxLength={10} />
-                                </Field>
-                                <div className="col-span-2">
-                                    <Field label="Alamat sesuai KTP" required>
-                    <textarea value={form.address} onChange={(e) => set("address")(e.target.value)}
-                              placeholder="Jalan, RT/RW, Kelurahan, Kecamatan, Kota"
-                              rows={3} className={inputClass + " resize-none leading-relaxed"} />
-                                    </Field>
-                                </div>
                                 <Field label="Jabatan di Perusahaan" required>
                                     <select value={form.jobTitle} onChange={(e) => set("jobTitle")(e.target.value)} className={inputClass}>
                                         <option value="">Pilih jabatan...</option>
@@ -606,14 +581,6 @@ export default function KYCPage() {
                                         <option>Manajer Operasional</option>
                                         <option>Staf IT / Sistem</option>
                                         <option>Lainnya</option>
-                                    </select>
-                                </Field>
-                                <Field label="Jenis Identitas" required>
-                                    <select value={form.idType} onChange={(e) => set("idType")(e.target.value)} className={inputClass}>
-                                        <option value="">Pilih jenis...</option>
-                                        <option>KTP</option>
-                                        <option>Paspor</option>
-                                        <option>KITAS / KITAP</option>
                                     </select>
                                 </Field>
                             </div>
@@ -690,59 +657,8 @@ export default function KYCPage() {
                         </div>
                     )}
 
-                    {/* ═══ STEP 4: DOKUMEN ═══ */}
-                    {step === 4 && (
-                        <div>
-                            <PanelHeader step={4}
-                                         title={<>Upload <em className="italic text-rimba">dokumen legal</em></>}
-                                         subtitle="Unggah dokumen asli dalam format JPG, PNG, atau PDF. Maks. 5 MB per file."
-                            />
-                            {/* Info box */}
-                            <div className="flex gap-3 p-4 rounded-[10px] border mb-7"
-                                 style={{ background: "rgba(184,150,46,0.06)", borderColor: "rgba(184,150,46,0.2)" }}>
-                                <span className="text-base flex-shrink-0 mt-0.5">🔒</span>
-                                <p className="text-[12.5px] leading-relaxed" style={{ color: "#4A3728" }}>
-                                    <strong className="font-medium">Keamanan dokumen:</strong> Semua file dienkripsi AES-256 saat upload.
-                                    Hanya digunakan untuk verifikasi KYC sesuai UU PDP No. 27/2022.
-                                </p>
-                            </div>
-                            <div className="grid grid-cols-1 gap-5">
-                                <Field label="Foto KTP Penanggung Jawab" required>
-                                    <FileUploadZone id="up-ktp" label="KTP (sisi depan)" hint="JPG, PNG, PDF · Maks 5MB"
-                                                    accept=".jpg,.jpeg,.png,.pdf" file={files.ktp}
-                                                    onChange={setFile("ktp")} onRemove={() => setFile("ktp")(null)} />
-                                </Field>
-                                <Field label="Foto Selfie Memegang KTP" required>
-                                    <FileUploadZone id="up-selfie" label="Selfie + KTP tampak jelas"
-                                                    hint="Wajah dan teks KTP harus terbaca · JPG, PNG · Maks 5MB"
-                                                    accept=".jpg,.jpeg,.png" file={files.selfie}
-                                                    onChange={setFile("selfie")} onRemove={() => setFile("selfie")(null)} />
-                                </Field>
-                                <div className="grid grid-cols-2 gap-5">
-                                    <Field label="NPWP Perusahaan (scan)" required>
-                                        <FileUploadZone id="up-npwp" label="Kartu NPWP" hint="JPG, PNG, PDF · Maks 5MB"
-                                                        accept=".jpg,.jpeg,.png,.pdf" file={files.npwpDoc}
-                                                        onChange={setFile("npwpDoc")} onRemove={() => setFile("npwpDoc")(null)} />
-                                    </Field>
-                                    <Field label="Sertifikat NIB" required>
-                                        <FileUploadZone id="up-nib" label="NIB dari OSS" hint="JPG, PNG, PDF · Maks 5MB"
-                                                        accept=".jpg,.jpeg,.png,.pdf" file={files.nibDoc}
-                                                        onChange={setFile("nibDoc")} onRemove={() => setFile("nibDoc")(null)} />
-                                    </Field>
-                                </div>
-                                <Field label="Akta Pendirian / Perubahan Terakhir" optional>
-                                    <FileUploadZone id="up-akta" label="Akta Notaris (PDF)"
-                                                    hint="Hanya PDF · Maks 5MB · Disarankan untuk Enterprise"
-                                                    accept=".pdf" file={files.akta}
-                                                    onChange={setFile("akta")} onRemove={() => setFile("akta")(null)} />
-                                </Field>
-                            </div>
-                            <NavButtons onBack={() => setStep(3)} onNext={() => setStep(5)} nextLabel="Lanjut ke Konfirmasi" />
-                        </div>
-                    )}
-
                     {/* ═══ STEP 5: KONFIRMASI ═══ */}
-                    {step === 5 && (
+                    {step === 4 && (
                         <div>
                             <PanelHeader step={5}
                                          title={<>Tinjau & <em className="italic text-rimba">konfirmasi</em></>}
@@ -757,11 +673,11 @@ export default function KYCPage() {
                                         rows: [{ label: "Email", value: form.email || "—" }],
                                     },
                                     {
-                                        title: "Identitas Pribadi",
+                                        title: "Penanggung Jawab",
                                         editStep: 2,
                                         rows: [
                                             { label: "Nama", value: `${form.firstName} ${form.lastName}`.trim() || "—" },
-                                            { label: "NIK", value: form.nik || "—" },
+                                            { label: "Jabatan", value: form.jobTitle || "—" },
                                         ],
                                     },
                                     {
