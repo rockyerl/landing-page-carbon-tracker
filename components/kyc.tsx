@@ -721,7 +721,7 @@ export default function KYCPage() {
                                     Saya menyatakan bahwa seluruh data dan dokumen yang diberikan adalah benar, sah, dan dapat dipertanggungjawabkan.
                                 </CheckboxField>
                             </div>
-                            <NavButtons onBack={() => setStep(4)} onNext={handleSubmit}
+                            <NavButtons onBack={() => setStep(3)} onNext={handleSubmit}
                                         nextLabel="Kirim Permohonan Verifikasi" isLoading={loading} />
                         </div>
                     )}
