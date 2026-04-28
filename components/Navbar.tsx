@@ -45,7 +45,7 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  const links = ["Fitur", "Pricing", "Regulasi", "Roadmap"];
+  const links = ["Fitur", "Pricing", "Regulasi"];
 
   return (
     <nav
@@ -84,9 +84,6 @@ export default function Navbar() {
 
         {/* CTA */}
         <div className="hidden md:flex items-center gap-3">
-          <a href="#pricing" className="text-sm text-abu hover:text-arang transition-colors px-4 py-2 font-ui">
-            Masuk
-          </a>
           <a
             href="#pricing"
             className="text-sm bg-rimba hover:bg-jati text-lontar font-semibold px-5 py-2 rounded-lg transition-colors duration-200 font-ui"

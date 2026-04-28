@@ -14,7 +14,7 @@ export function CTA() {
             Dari semua penjuru, satu pandangan.
           </p>
           <h2 className="font-display text-4xl font-normal tracking-tight mb-4 text-arang">
-            Gratis untuk 1 Aset.
+            Gratis untuk 3 Aset.
             <br />
             <span className="text-abu font-display">Tidak Perlu Kartu Kredit.</span>
           </h2>
@@ -63,10 +63,10 @@ function NawasangaLogoSmall() {
 
 export function Footer() {
   const links = {
-    Produk: ["Fitur", "Pricing", "Roadmap", "Changelog"],
+    Produk: ["Fitur", "Pricing", "Changelog"],
     Regulasi: ["IPCC 2006", "Perpres 98/2021", "KLHK SIGN-SMART", "GHG Protocol"],
     Perusahaan: ["Tentang Kami", "Blog", "Karir", "Press Kit"],
-    Dukungan: ["Dokumentasi", "API Reference", "Status", "Kontak"],
+    Dukungan: ["Dokumentasi", "Status", "Kontak"],
   };
 
   return (
@@ -108,7 +108,7 @@ export function Footer() {
 
         <div className="pt-8 border-t border-rimba/10 flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="font-ui text-xs text-abu/40">
-            © 2025 Nawasanga ESG Platform. All rights reserved.
+            © 2026 Nawasanga ESG Platform. PT Sundawa Teknologi All rights reserved.
           </div>
           <div className="flex flex-wrap gap-3 justify-center">
             {["IPCC 2006", "Perpres 98/2021", "Permen LHK 21/2022", "KLHK SIGN-SMART"].map((tag) => (
