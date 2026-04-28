@@ -14,7 +14,6 @@ export default function Home() {
       <Features />
       <Pricing />
       <Regulasi />
-      <Roadmap />
       <CTA />
       <Footer />
     </main>
