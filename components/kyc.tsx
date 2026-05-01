@@ -1,6 +1,6 @@
 "use client";
 import { useState, useCallback } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 interface FormData {
@@ -393,6 +393,7 @@ function PanelHeader({ step, title, subtitle }: { step: number; title: React.Rea
 // ─── Main KYC Page ────────────────────────────────────────────────────────────
 export default function KYCPage() {
     const searchParams = useSearchParams();
+    const router = useRouter();
     const selectedPlan = searchParams.get("plan") ?? "";
 
     const planLabels: Record<string, { name: string; color: string; bg: string }> = {
@@ -403,7 +404,6 @@ export default function KYCPage() {
     };
     const planInfo = planLabels[selectedPlan] ?? null;
     const [step, setStep] = useState(1);
-    const [done, setDone] = useState(false);
     const [loading, setLoading] = useState(false);
 
     const [form, setForm] = useState<FormData>({
@@ -452,44 +452,20 @@ export default function KYCPage() {
             return;
         }
         setLoading(true);
-        setTimeout(() => { setLoading(false); setDone(true); }, 1800);
+        setTimeout(() => {
+            // Simpan data KYC ke sessionStorage untuk dibaca halaman Payment
+            try {
+                sessionStorage.setItem("nawasanga_kyc", JSON.stringify(form));
+            } catch {
+                // sessionStorage tidak tersedia, lanjut saja
+            }
+            setLoading(false);
+            // Redirect ke halaman pembayaran dengan plan yang dipilih
+            router.push(`/payment?plan=${selectedPlan || "freemium"}`);
+        }, 1800);
     };
 
-    const progress = done ? 100 : (step / STEPS.length) * 100;
-
-    // ── Success Screen ────────────────────────────────────────────────────────
-    if (done) {
-        return (
-            <div className="flex min-h-screen bg-lontar">
-                <Sidebar currentStep={6} />
-                <main className="flex-1 flex items-center justify-center p-12">
-                    <div className="text-center max-w-md">
-                        <div className="w-[72px] h-[72px] rounded-full border-[1.5px] border-rimba/30 bg-rimba/10 flex items-center justify-center mx-auto mb-6 text-2xl">
-                            ✓
-                        </div>
-                        <h2 className="font-display text-[1.9rem] font-normal text-arang mb-3">Permohonan terkirim!</h2>
-                        <p className="text-[14px] text-abu leading-relaxed mb-8">
-                            Data KYC Anda sedang dalam proses verifikasi otomatis. Notifikasi akan dikirim
-                            melalui email dan WhatsApp dalam <strong className="text-arang font-medium">1×24 jam</strong>.
-                        </p>
-                        <div className="flex flex-wrap justify-center gap-2 mb-10">
-                            {["Enkripsi AES-256", "UU PDP Compliant", "Verifikasi Otomatis", "Notifikasi WhatsApp"].map((b) => (
-                                <span key={b} className="text-[11px] font-medium text-rimba border border-rimba/20 bg-rimba/5 px-3 py-1 rounded-full">
-                  {b}
-                </span>
-                            ))}
-                        </div>
-                        <button
-                            className="px-9 py-3.5 rounded-[10px] bg-rimba hover:bg-jati text-lontar text-[14px] font-medium transition-colors"
-                            onClick={() => alert("Menuju dashboard...")}
-                        >
-                            Masuk ke Dashboard →
-                        </button>
-                    </div>
-                </main>
-            </div>
-        );
-    }
+    const progress = (step / STEPS.length) * 100;
 
     return (
         <div className="flex min-h-screen bg-lontar">

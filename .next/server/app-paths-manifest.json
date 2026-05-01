@@ -1,3 +1,6 @@
 {
-  "/kyc/page": "app/kyc/page.js"
+  "/_not-found/page": "app/_not-found/page.js",
+  "/payment/page": "app/payment/page.js",
+  "/kyc/page": "app/kyc/page.js",
+  "/page": "app/page.js"
 }
